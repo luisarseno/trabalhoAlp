@@ -9,14 +9,14 @@ public class LinkedList {
     private Node head;
     private Node tail;
 
-    private class Node{
+    private class Node {
 
         private Node next;
         private Node ant;
-        private int element;
+        private Product element;
 
-        public Node(int value){
-            this.element = value;
+        public Node(Product product) {
+            this.element = product;
         }
 
         public Node getNext() {
@@ -35,61 +35,73 @@ public class LinkedList {
             this.ant = ant;
         }
 
-        public int getElement() {
+        public Product getElement() {
             return element;
         }
 
-        public void setElement(int element) {
+        public void setElement(Product element) {
             this.element = element;
         }
 
     }
 
-    public LinkedList(){
+    public LinkedList() {
         this.size = 0;
     }
 
-    private boolean isEmpty(){
-        if(this.size == 0){
+    private boolean isEmpty() {
+        if (this.size == 0) {
             return true;
         }
         return false;
     }
 
-    public void addElement(int value){
-        if(isEmpty()){
-            head.setElement(value);
-        } else {
-            Node aux = head;
-            Node auxProx = head.getNext();
-            while(aux != null){
-                if(auxProx == null){
-                    auxProx = new Node(value);
-                    auxProx.setAnt(aux);
-                }
-                aux = auxProx;
-                auxProx = auxProx.getNext();
-            }
-        }
-    }
-
-    public boolean removeElement(int value) throws EmptyLinkedListException, NotFoundValueException{
-        if(isEmpty()){
-            throw new EmptyLinkedListException("Lista está vazia!");
+    public void addElement(Product product) {
+        if (isEmpty()) {
+            head = new Node(product);
         } else {
             Node aux = head;
             while(aux != null){
-                if(aux.getElement() == value){
-                    Node ant = aux.getAnt();
-                    ant.setNext(aux.getNext());
-                    return true;
+                if(aux.getNext() == null){
+                    aux.setNext(new Node(product));
+                    aux.getNext().setAnt(aux);
+                    break;
                 }
                 aux = aux.getNext();
             }
         }
-        throw new NotFoundValueException("Valor nao esta na lista");
+        size++;
     }
 
-    public void reorderList(){
+    public boolean removeElement(int code) throws EmptyLinkedListException, NotFoundValueException {
+        if (isEmpty()) {
+            throw new EmptyLinkedListException("Lista esta vazia!");
+        }
+        Node aux = head;
+        while (aux != null) {
+            if (aux.getElement().getCod() == code) {
+                Node ant = aux.getAnt();
+                ant.setNext(aux.getNext());
+                size--;
+                return true;
+            }
+            aux = aux.getNext();
+        }
+
+        throw new NotFoundValueException("Cod("+code+") : nao esta na lista");
+    }
+
+    public void reorderList() {
+    }
+
+    public void printLinkedList() throws EmptyLinkedListException {
+        if (isEmpty()) {
+            throw new EmptyLinkedListException("Lista esta vazia!");
+        }
+        Node aux = head;
+        while (aux != null){
+            System.out.println(aux.getElement().toString());
+            aux = aux.getNext();
+        }
     }
 }
