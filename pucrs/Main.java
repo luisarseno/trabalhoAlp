@@ -9,14 +9,41 @@ public class Main  {
     public static Scanner read = new Scanner(System.in);
     public static Hash tableHash = new Hash();
     public static void main(String[] args) {
+        int op;
         while(true){
             menu();
-            read.nextInt();
+            op = read.nextInt();
+            switch (op){
+                case 1:
+                    cadastraProduto();
+                break;
+                case 2:
+                    pegaProdutoCodigo();
+                break;
+                case 3:
+                    pegaProdutoName();
+                break;
+                case 4:
+                    removerProduto();
+                break;
+                case 5:
+                    informaMaisBarato();
+                break;
+                case 6:
+                    exibeTodosProdutos();
+                break;
+                default:
+                break;
+            }
+
+            if(op >= 7){
+                break;
+            }
         }
     }
 
     public static void menu(){
-        System.out.println("Menu de opções: ");
+        System.out.println("Menu de opcoes: ");
         System.out.println("1 - Cadastro de produtos");
         System.out.println("2 - Procurar produto pelo codigo");
         System.out.println("3 - Procurar produto pelo nome");
@@ -37,5 +64,42 @@ public class Main  {
         System.out.println("Informe o preco: ");
         double preco = read.nextDouble();
         Product produto =  new Product(codigo,nome,setor,preco);
+        try {
+            tableHash.addElement(produto);
+        } catch (ProductAlreadyRegisteredException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void pegaProdutoCodigo(){
+        System.out.println("\tProcurar produto pelo codigo\n");
+        System.out.println("Informe o codigo");
+        int codigo = read.nextInt();
+        tableHash.getProductByCode(codigo);
+    }
+
+    public static void pegaProdutoName(){
+        System.out.println("\tProcurar produto pelo codigo\n");
+        System.out.println("Informe o codigo");
+        int codigo = read.nextInt();
+        tableHash.getProductByCode(codigo);
+    }
+
+    public static void removerProduto(){
+
+    }
+
+    public static void informaMaisBarato(){
+        System.out.println("\tProduto mais barato\n");
+        try {
+            System.out.println(tableHash.getLowestPrice());
+        } catch (EmptyLinkedListException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void exibeTodosProdutos(){
+        System.out.println("\tTodos os produtos\n");
+        tableHash.printAllProducts();
     }
 }

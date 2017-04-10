@@ -40,17 +40,16 @@ public class LinkedList {
             return element;
         }
 
-        public void setElement(Product element) {
-            this.element = element;
-        }
-
     }
 
     public LinkedList() {
         this.size = 0;
+        this.lowestPrice = null;
+        this.head = null;
+        this.tail = null;
     }
 
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         if (this.size == 0) {
             return true;
         }
@@ -110,6 +109,9 @@ public class LinkedList {
         Node aux = head;
         while (aux != null) {
             if (aux.getElement().getCod() == code) {
+                if(aux.equals(tail)){
+                    tail = aux.getAnt();
+                }
                 Node ant = aux.getAnt();
                 ant.setNext(aux.getNext());
                 size--;

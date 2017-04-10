@@ -11,17 +11,25 @@ public class Hash {
     private ArrayList<LinkedList> tableProduct;
 
     public Hash() {
-        this.tableProduct = new ArrayList<LinkedList>(sizeTable);
+        this.tableProduct = new ArrayList<>(sizeTable);
+        this.initializeArray();
+    }
+
+    private void initializeArray(){
+        for(int i = 0 ; i < sizeTable ; i++){
+            this.tableProduct.add(new LinkedList());
+        }
     }
 
     public void addElement(Product product) throws ProductAlreadyRegisteredException{
         int pos = this.hashCode(product.getCod());
+        System.out.println(pos);
         try{
             this.tableProduct.get(pos).getProductByCode(product.getCod());
             throw new ProductAlreadyRegisteredException("Produto ("+product.getCod()+") ja cadastrado");
         } catch (EmptyLinkedListException | NotFoundValueException e){
             this.tableProduct.get(pos).addElement(product);
-            System.out.println("Produto ("+product.getCod()+") cadastrado com sucesso.");
+            System.out.println("Produto ("+product.getCod()+") cadastrado com sucesso. -> Tabela: "+pos);
         }
     }
 
@@ -55,13 +63,31 @@ public class Hash {
         return product;
     }
 
-    public Product getLowestPrice(){
-        Product lowPrice = this.tableProduct.get(0).getLowestPrice();
+    public void getProductByCode(int code){
+        int pos = this.hashCode(code);
+        try{
+            System.out.println(this.tableProduct.get(pos).getProductByCode(code));
+        } catch (EmptyLinkedListException|NotFoundValueException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Product getLowestPrice() throws EmptyLinkedListException {
+        Product lowPrice = null;
         for(LinkedList list : this.tableProduct){
-            if(lowPrice.getPrice() > list.getLowestPrice().getPrice()){
+            if(list.isEmpty()){
+                continue;
+            }
+            if(lowPrice == null){
+                lowPrice = list.getLowestPrice();
+            } else if(lowPrice.getPrice() < list.getLowestPrice().getPrice()){
                 lowPrice = list.getLowestPrice();
             }
         }
+        if(lowPrice == null){
+            throw new EmptyLinkedListException("Listas vazias");
+        }
+
         return lowPrice;
     }
 
