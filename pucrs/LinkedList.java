@@ -97,7 +97,7 @@ public class LinkedList {
         size++;
     }
 
-    public boolean removeElement(int code) throws EmptyLinkedListException, NotFoundValueException {
+    public void removeElement(int code) throws EmptyLinkedListException, NotFoundValueException{
         if (isEmpty()) {
             throw new EmptyLinkedListException("Lista esta vazia!");
         }
@@ -105,7 +105,7 @@ public class LinkedList {
             //primeiro elemento da lista
             head = null;
             size--;
-            return true;
+            return;
         }
         Node aux = head;
         while (aux != null) {
@@ -113,7 +113,7 @@ public class LinkedList {
                 Node ant = aux.getAnt();
                 ant.setNext(aux.getNext());
                 size--;
-                return true;
+                return;
             }
             aux = aux.getNext();
         }
