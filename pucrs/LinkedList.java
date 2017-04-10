@@ -8,6 +8,7 @@ public class LinkedList {
     private int size;
     private Node head;
     private Node tail;
+    private Node lowestPrice;
 
     private class Node {
 
@@ -57,18 +58,41 @@ public class LinkedList {
     }
 
     public void addElement(Product product) {
+        Node novoNodo = new Node(product);
         if (isEmpty()) {
-            head = new Node(product);
+            head = novoNodo;
+            tail = novoNodo;
+            lowestPrice = novoNodo;
         } else {
-            Node aux = head;
-            while(aux != null){
-                if(aux.getNext() == null){
-                    aux.setNext(new Node(product));
-                    aux.getNext().setAnt(aux);
-                    break;
+            if(head.getElement().getCod() > product.getCod()){
+                novoNodo.setNext(head);
+                head.setAnt(novoNodo);
+                head = novoNodo;
+            } else {
+                Node aux = head;
+                while (aux != null) {
+                    if (aux.getElement().getCod() < product.getCod()) {
+                        if(aux.equals(tail)){
+                            tail = novoNodo;
+                            novoNodo.setAnt(aux);
+                            aux.setNext(novoNodo);
+                            break;
+                        }
+                        aux = aux.getNext();
+                    } else if (aux.getElement().getCod() > product.getCod()) {
+                        aux.getAnt().setNext(novoNodo);
+                        novoNodo.setAnt(aux.getAnt());
+                        aux.setAnt(novoNodo);
+                        novoNodo.setNext(aux);
+                        break;
+                    } else {
+                        aux = aux.getNext();
+                    }
                 }
-                aux = aux.getNext();
             }
+        }
+        if(novoNodo.getElement().getPrice() < lowestPrice.getElement().getPrice()){
+            lowestPrice = novoNodo;
         }
         size++;
     }
@@ -76,6 +100,12 @@ public class LinkedList {
     public boolean removeElement(int code) throws EmptyLinkedListException, NotFoundValueException {
         if (isEmpty()) {
             throw new EmptyLinkedListException("Lista esta vazia!");
+        }
+        if(head.getElement().getCod() == code){
+            //primeiro elemento da lista
+            head = null;
+            size--;
+            return true;
         }
         Node aux = head;
         while (aux != null) {
@@ -87,11 +117,7 @@ public class LinkedList {
             }
             aux = aux.getNext();
         }
-
         throw new NotFoundValueException("Cod("+code+") : nao esta na lista");
-    }
-
-    public void reorderList() {
     }
 
     public void printLinkedList() throws EmptyLinkedListException {
@@ -103,5 +129,37 @@ public class LinkedList {
             System.out.println(aux.getElement().toString());
             aux = aux.getNext();
         }
+    }
+
+    public Product getProductByName(String name) throws EmptyLinkedListException, NotFoundValueException{
+        if (isEmpty()) {
+            throw new EmptyLinkedListException("Lista esta vazia!");
+        }
+        Node aux = head;
+        while (aux != null){
+            if(aux.getElement().getName().equals(name)){
+                return aux.getElement();
+            }
+            aux = aux.getNext();
+        }
+        throw new NotFoundValueException("Name("+name+") nao esta na lista");
+    }
+
+    public Product getProductByCode(int code) throws EmptyLinkedListException, NotFoundValueException{
+        if (isEmpty()) {
+            throw new EmptyLinkedListException("Lista esta vazia!");
+        }
+        Node aux = head;
+        while (aux != null){
+            if(aux.getElement().getCod() == code){
+                return aux.getElement();
+            }
+            aux = aux.getNext();
+        }
+        throw new NotFoundValueException("Code("+code+") nao esta na lista");
+    }
+
+    public Product getLowestPrice() {
+        return this.lowestPrice.getElement();
     }
 }
