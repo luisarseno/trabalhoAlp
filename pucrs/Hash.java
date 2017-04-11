@@ -23,7 +23,6 @@ public class Hash {
 
     public void addElement(Product product) throws ProductAlreadyRegisteredException{
         int pos = this.hashCode(product.getCod());
-        System.out.println(pos);
         try{
             this.tableProduct.get(pos).getProductByCode(product.getCod());
             throw new ProductAlreadyRegisteredException("Produto ("+product.getCod()+") ja cadastrado");
@@ -40,7 +39,8 @@ public class Hash {
     public void removeElement(int code){
         int pos = this.hashCode(code);
         try{
-            this.tableProduct.get(code).removeElement(code);
+            System.out.println("Produto: "+this.tableProduct.get(pos).getProductByCode(code)+" - removido");
+            this.tableProduct.get(pos).removeElement(code);
         } catch (EmptyLinkedListException | NotFoundValueException e){
             System.out.println(e.getMessage());
         }
@@ -68,7 +68,7 @@ public class Hash {
         try{
             System.out.println(this.tableProduct.get(pos).getProductByCode(code));
         } catch (EmptyLinkedListException|NotFoundValueException e){
-            System.out.println(e.getMessage());
+            System.out.println("Code("+code+") nao esta na lista");
         }
     }
 
@@ -80,7 +80,7 @@ public class Hash {
             }
             if(lowPrice == null){
                 lowPrice = list.getLowestPrice();
-            } else if(lowPrice.getPrice() < list.getLowestPrice().getPrice()){
+            } else if(lowPrice.getPrice() > list.getLowestPrice().getPrice()){
                 lowPrice = list.getLowestPrice();
             }
         }

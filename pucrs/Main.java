@@ -1,48 +1,50 @@
 package pucrs;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
  * Created by santana on 06/04/17.
  */
-public class Main  {
+public class Main {
     public static Scanner read = new Scanner(System.in);
     public static Hash tableHash = new Hash();
+
     public static void main(String[] args) {
         int op;
-        while(true){
+        while (true) {
             menu();
             op = read.nextInt();
-            switch (op){
+            switch (op) {
                 case 1:
                     cadastraProduto();
-                break;
+                    break;
                 case 2:
                     pegaProdutoCodigo();
-                break;
+                    break;
                 case 3:
                     pegaProdutoName();
-                break;
+                    break;
                 case 4:
                     removerProduto();
-                break;
+                    break;
                 case 5:
                     informaMaisBarato();
-                break;
+                    break;
                 case 6:
                     exibeTodosProdutos();
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
 
-            if(op >= 7){
+            if (op >= 7) {
                 break;
             }
         }
     }
 
-    public static void menu(){
+    public static void menu() {
         System.out.println("Menu de opcoes: ");
         System.out.println("1 - Cadastro de produtos");
         System.out.println("2 - Procurar produto pelo codigo");
@@ -53,7 +55,7 @@ public class Main  {
         System.out.println("7 - Sair");
     }
 
-    public static void cadastraProduto(){
+    public static void cadastraProduto() {
         System.out.println("\tCadastro de produto\n");
         System.out.println("Informe o codigo do produto: ");
         int codigo = read.nextInt();
@@ -63,42 +65,52 @@ public class Main  {
         int setor = read.nextInt();
         System.out.println("Informe o preco: ");
         double preco = read.nextDouble();
-        Product produto =  new Product(codigo,nome,setor,preco);
+        Product produto = new Product(codigo, nome, setor, preco);
+
         try {
             tableHash.addElement(produto);
-        } catch (ProductAlreadyRegisteredException e){
+        } catch (ProductAlreadyRegisteredException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static void pegaProdutoCodigo(){
+    public static void pegaProdutoCodigo() {
         System.out.println("\tProcurar produto pelo codigo\n");
         System.out.println("Informe o codigo");
         int codigo = read.nextInt();
         tableHash.getProductByCode(codigo);
     }
 
-    public static void pegaProdutoName(){
+    public static void pegaProdutoName() {
         System.out.println("\tProcurar produto pelo codigo\n");
+        System.out.println("Informe o nome: ");
+        String nome = read.next();
+        try {
+            System.out.println(tableHash.getProductByName(nome));
+
+        } catch (NotFoundValueException e ){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void removerProduto() {
+        System.out.println("\tRemover Produto\n");
         System.out.println("Informe o codigo");
         int codigo = read.nextInt();
-        tableHash.getProductByCode(codigo);
-    }
-
-    public static void removerProduto(){
+        tableHash.removeElement(codigo);
 
     }
 
-    public static void informaMaisBarato(){
+    public static void informaMaisBarato() {
         System.out.println("\tProduto mais barato\n");
         try {
             System.out.println(tableHash.getLowestPrice());
-        } catch (EmptyLinkedListException e){
+        } catch (EmptyLinkedListException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static void exibeTodosProdutos(){
+    public static void exibeTodosProdutos() {
         System.out.println("\tTodos os produtos\n");
         tableHash.printAllProducts();
     }
